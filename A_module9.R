@@ -11,9 +11,29 @@
 ## data in the vore column. Remember to include informative axis labels.Briefly describe in 1-2 sentences the 
 ## major patterns in the plot.
 
+## Load the desired dataset
+library(ggplot2)
+data(msleep)
+
+## Examine the dataset
+?msleep  # Inquiry the help file on this data. It is a data frame with 83 rows and 11 variables
+str(msleep)  # Data frame appears to be a table, with character and number variables, NAs are present
+head(msleep) # Header shows column names
+
+## Find the number of unique diet types
+length(unique(msleep$vore)) # There are 5 diet types
+unique(msleep$vore)  # But one of them is "NA" 
+sum(is.na(msleep$vore))  # Seven samples diet types are listed at "NA" 
+length(unique(na.omit(msleep$vore))) # There are 4 diet types if we exclude NAs
+
+## There are 4 listed diet types if we exclude NAs from our consideration
 
 
+## Create boxplot of sleep totals
+boxplot(msleep$sleep_total ~ msleep$vore, ylab = "Total Sleep (hrs)",
+        xlab = "Diet Type")
 
+## PATTERN DESCRIPTION
 
 
 
@@ -25,9 +45,18 @@
 ##length? Consider whether your conclusions are justified by the data.
 
 
+## Create plot using "plot"
+plot(log(msleep$bodywt), msleep$sleep_cycle, xlab = "Body Weight [ln(kg)]",
+     ylab = "Sleep Cycle Length (hrs)")
 
 
+## Create plot using ggplot
+ggplot(data = msleep, aes(x = log(msleep$bodywt), y = msleep$sleep_cycle))
 
+
+ggplot(data = TimeData, aes(x = year, y = n)) + geom_line(aes(color = species_id), size = 1.5) +
+  xlab("Year") + ylab("Number of Individuals Sampled") + scale_color_discrete(name ="Species") + 
+  ggtitle("Time Series of Rodent Species' Samples")
 
 
 # (3)	How does the ratio of brain weight to body weight (i.e., brainwt/bodywt) vary by diet type? Write a function
