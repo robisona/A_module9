@@ -51,7 +51,13 @@ plot(log(msleep$bodywt), msleep$sleep_cycle, xlab = "Body Weight [ln(kg)]",
 
 
 ## Create plot using ggplot
-ggplot(data = msleep, aes(x = log(msleep$bodywt), y = msleep$sleep_cycle))
+length(unique(na.omit(msleep$conservation)))  # There are 6 conservation types
+par(mfrow = c(2,3))  #Set yp 6 panels, 2 by 3
+
+
+
+ggplot(data = msleep, aes(x = log(msleep$bodywt), y = msleep$sleep_cycle)) +  
+         xlab("Body Weight [ln(kg)]") + ylab("Sleep Cycle Length (hrs)")
 
 
 ggplot(data = TimeData, aes(x = year, y = n)) + geom_line(aes(color = species_id), size = 1.5) +
@@ -65,6 +71,31 @@ ggplot(data = TimeData, aes(x = year, y = n)) + geom_line(aes(color = species_id
 ## brain-to-body weight ratio within a vore category, and “brain_body_se” contains the standard error for the 
 ##brain-to-body weight ratio within a vore category.
 
+#Creat standard error function that includes NA removal for ease of use
+se <- function(x, na.rm=FALSE) {
+  if(na.rm == TRUE) x <- na.omit(x)
+  sd(x)/sqrt(length(x))
+}
+
+# Create function with inputs x = diet type, y =  brain weight, and z = body weight
+brain_body_ratio <- function(x,y,z){
+  
+  # Calculate mean brain to body weight ratio for each diet type category, ignore NA's
+  BBR <- aggregate(y/z, list(x), mean, na.rm = T)
+  
+  # Rename column headers
+  colnames(BBR) <- c("vore","brain_body_mean")
+  
+  # Calculate the standard error 
+  BBR2 <- aggregate(y/z, list(x), se, na.rm = T)
+  
+  #Add standard error to BBR
+  BBR$brain_body_se <- BBR2[,2]
+  
+  # Return the result BBR (brain-to-body weight ratio)
+  return(BBR)
+  
+}
 
 
 
