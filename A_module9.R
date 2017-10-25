@@ -25,9 +25,9 @@ head(msleep) # Header shows column names
 
 ## Find the number of unique diet types
 length(unique(msleep$vore)) # There are 5 diet types
-unique(msleep$vore)  # But one of them is "NA" 
-sum(is.na(msleep$vore))  # Seven samples diet types are listed at "NA" 
-length(unique(na.omit(msleep$vore))) # There are 4 diet types if we exclude NAs
+unique(msleep$vore)  # But one diet type is an "NA" 
+sum(is.na(msleep$vore))  # Seven samples have an "NA" diet type
+length(unique(na.omit(msleep$vore))) # Number of diet types, excluding "NA"
 ## There are 4 listed diet types if we exclude NAs from our consideration
 
 
@@ -44,8 +44,9 @@ boxplot(PlotData$sleep_total ~ PlotData$vore, ylab = "Total Sleep (hrs)",
         xlab = "Diet Type", main = "Daily Sleep by Diet Type")
 
 ## Pattern description
-# While the total sleep disturbution for all diet types overlap, the mean sleep for insectivores is notable higher (~18 hours)
+# While the total sleep disturbution for all diet types overlap, the mean sleep for insectivores is notably higher (~18 hours)
 # compared to the other three diet types (carnivore, herbivore, and omnivore), which all have mean sleep totals around 10 hours.
+# Omnivores were found to have smallest interquartile range, and the only outliers in the plot were also found within this diet type.
 
 
 
@@ -83,16 +84,17 @@ dim(GGData)
 length(unique(GGData$conservation))
 # 5 conservation types
 
-#Set up panels for separate figures. Since we have 5, let's do a 2x3 setup
-par(mfrow = c(2,3))  
 
 #Load ggplot2
 library(ggplot2)
 
-ggplot(data = GGData, aes(x = log(GGData$bodywt), y = GGData$sleep_cycle)) + geom_point() +
-  stat_smooth(method="lm", se=F) + facet_grid(~ GGData$conservation) + xlab("Body Weight [ln(kg)]") +
-  ylab("Sleep Cycle Length (hrs)") + ggtitle("Sleep Cycle Length vs. Body Weright for Conservation Statuses")
 
+ggplot(data = GGData, aes(x = log(GGData$bodywt), y = GGData$sleep_cycle, group = conservation, color = conservation)) + 
+  geom_point() +
+  facet_wrap( ~ conservation) + 
+  ggtitle("Sleep Cycle Length vs. Body Weright for Conservation Statuses") +
+  labs(x = "Body Weight [ln(kg)]", y = "Sleep Cycle Length (hrs)") +
+  stat_smooth(method = "lm", se = F) 
 
 
 ggplot(data = msleep, aes(x = log(msleep$bodywt), y = msleep$sleep_cycle)) +  
