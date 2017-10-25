@@ -62,13 +62,36 @@ boxplot(PlotData$sleep_total ~ PlotData$vore, ylab = "Total Sleep (hrs)",
 
 
 ## Create plot using "plot"
-plot(log(msleep$bodywt), msleep$sleep_cycle, xlab = "Body Weight [ln(kg)]",
+# Make sure we have a single panel 
+par(mfrow = c(1,1))  
+
+#Plot sleep cycle (y) vs the natural log of body weight (x) using 'plot' 
+plot(log(msleep$bodywt), msleep$sleep_cycle, pch = 19, xlab = "Body Weight [ln(kg)]",
      ylab = "Sleep Cycle Length (hrs)")
 
 
-## Create plot using ggplot
-length(unique(na.omit(msleep$conservation)))  # There are 6 conservation types
-par(mfrow = c(2,3))  #Set yp 6 panels, 2 by 3
+
+## Create plot using ggplot, but have a separate panel for each conservation status
+# Limit the msleep dataset to only where we have data for body size, sleep cycle, and conservation status
+GGData <- msleep[!is.na(msleep$bodywt) & !is.na(msleep$sleep_cycle) & !is.na(msleep$conservation), ]
+
+# See how many rows we are left with
+dim(GGData)  
+# Left with 21 rows
+
+# How many conservation types are there?
+length(unique(GGData$conservation))
+# 5 conservation types
+
+#Set up panels for separate figures. Since we have 5, let's do a 2x3 setup
+par(mfrow = c(2,3))  
+
+#Load ggplot2
+library(ggplot2)
+
+ggplot(data = GGData, aes(x = log(GGData$bodywt), y = GGData$sleep_cycle)) + geom_point() +
+  stat_smooth(method="lm", se=F) + facet_grid(~ GGData$conservation) + xlab("Body Weight [ln(kg)]") +
+  ylab("Sleep Cycle Length (hrs)") + ggtitle("Sleep Cycle Length vs. Body Weright for Conservation Statuses")
 
 
 
@@ -113,8 +136,11 @@ brain_body_ratio <- function(x,y,z){
   
 }
 
-
+## Apply function to our data
+# Input diet, brain weight, and body weight into function
 BBRatio <- brain_body_ratio(msleep$vore,msleep$brainwt,msleep$bodywt)
+
+#Examine output
 BBRatio
 
 
