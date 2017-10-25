@@ -1,7 +1,6 @@
 # A_module9.R
 # Module assignment for NR 995 Group A Module 9
 # Drew Robison, Korik Vargas, connor Breton
-# Last updated 10/24/17
 
 
 # (1)	The mammal sleep dataset is included in the ggplot2 package and provides information about the sleeping 
@@ -68,7 +67,7 @@ par(mfrow = c(1,1))
 
 #Plot sleep cycle (y) vs the natural log of body weight (x) using 'plot' 
 plot(log(msleep$bodywt), msleep$sleep_cycle, pch = 19, xlab = "Body Weight [ln(kg)]",
-     ylab = "Sleep Cycle Length (hrs)")
+     ylab = "Sleep Cycle Length (hrs)", main = "Sleep  Cycle vs Weight")
 
 
 
@@ -94,16 +93,7 @@ ggplot(data = GGData, aes(x = log(GGData$bodywt), y = GGData$sleep_cycle, group 
   facet_wrap( ~ conservation) + 
   ggtitle("Sleep Cycle Length vs. Body Weright for Conservation Statuses") +
   labs(x = "Body Weight [ln(kg)]", y = "Sleep Cycle Length (hrs)") +
-  stat_smooth(method = "lm", se = F) 
-
-
-ggplot(data = msleep, aes(x = log(msleep$bodywt), y = msleep$sleep_cycle)) +  
-         xlab("Body Weight [ln(kg)]") + ylab("Sleep Cycle Length (hrs)")
-
-
-ggplot(data = TimeData, aes(x = year, y = n)) + geom_line(aes(color = species_id), size = 1.5) +
-  xlab("Year") + ylab("Number of Individuals Sampled") + scale_color_discrete(name ="Species") + 
-  ggtitle("Time Series of Rodent Species' Samples")
+  stat_smooth(method = "lm", se = F) + scale_colour_discrete(name = "Conservation\nType")
 
 
 # (3)	How does the ratio of brain weight to body weight (i.e., brainwt/bodywt) vary by diet type? Write a function
@@ -112,7 +102,7 @@ ggplot(data = TimeData, aes(x = year, y = n)) + geom_line(aes(color = species_id
 ## brain-to-body weight ratio within a vore category, and “brain_body_se” contains the standard error for the 
 ##brain-to-body weight ratio within a vore category.
 
-#Creat standard error function that includes NA removal for ease of use
+#Create standard error function that includes NA removal for ease of use
 se <- function(x, na.rm=FALSE) {
   if(na.rm == TRUE) x <- na.omit(x)
   sd(x)/sqrt(length(x))
@@ -148,3 +138,9 @@ BBRatio
 
 
 # Member contributions:
+
+## Drew set up the github repository. Then all the members worked on Drew's code (first on repository),
+## made edits, and completed the final code together. Connor made major edits on questions 1 and 2, while
+## Korik made major edits on question 3 and fine tuned the plots (i.e. titles, etc.).
+
+
