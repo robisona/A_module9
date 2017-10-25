@@ -11,29 +11,45 @@
 ## data in the vore column. Remember to include informative axis labels.Briefly describe in 1-2 sentences the 
 ## major patterns in the plot.
 
+
 ## Load the desired dataset
 library(ggplot2)
 data(msleep)
 
-## Examine the dataset
+# Examine the dataset
 ?msleep  # Inquiry the help file on this data. It is a data frame with 83 rows and 11 variables
 str(msleep)  # Data frame appears to be a table, with character and number variables, NAs are present
 head(msleep) # Header shows column names
+
+
 
 ## Find the number of unique diet types
 length(unique(msleep$vore)) # There are 5 diet types
 unique(msleep$vore)  # But one of them is "NA" 
 sum(is.na(msleep$vore))  # Seven samples diet types are listed at "NA" 
 length(unique(na.omit(msleep$vore))) # There are 4 diet types if we exclude NAs
-
 ## There are 4 listed diet types if we exclude NAs from our consideration
 
 
-## Create boxplot of sleep totals
-boxplot(msleep$sleep_total ~ msleep$vore, ylab = "Total Sleep (hrs)",
-        xlab = "Diet Type")
 
-## PATTERN DESCRIPTION
+## Make a boxplot comparing the daily sleep totals across the vore categories
+# Make sure we have a single panel 
+par(mfrow = c(1,1))  
+
+# Limit data for plot to where we have "vore" data (i.e. exclude rows with NA in the vore column)
+PlotData <- msleep[!is.na(msleep$vore), ]
+
+# Create plot
+boxplot(PlotData$sleep_total ~ PlotData$vore, ylab = "Total Sleep (hrs)",
+        xlab = "Diet Type", main = "Daily Sleep by Diet Type")
+
+## Pattern description
+# While the total sleep disturbution for all diet types overlap, the mean sleep for insectivores is notable higher (~18 hours)
+# compared to the other three diet types (carnivore, herbivore, and omnivore), which all have mean sleep totals around 10 hours.
+
+
+
+
 
 
 
@@ -98,6 +114,8 @@ brain_body_ratio <- function(x,y,z){
 }
 
 
+BBRatio <- brain_body_ratio(msleep$vore,msleep$brainwt,msleep$bodywt)
+BBRatio
 
 
 
